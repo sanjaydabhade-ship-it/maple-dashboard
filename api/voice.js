@@ -1,18 +1,18 @@
 export default async function handler(req, res) {
   try {
+    const GEMINI_KEY = process.env.GEMINI_KEY;
+
+    const { prompt } = req.body;
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_KEY,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_KEY,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
-              role: "user",
-              parts: [{ text: "You are Maple AI, sales strategist. Reply in Hinglish." }],
+              parts: [{ text: prompt }],
             },
           ],
         }),
@@ -20,8 +20,12 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: "Voice API failed" });
+
+    const text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text || "No reply";
+
+    res.status(200).json({ reply: text });
+  } catch (e) {
+    res.status(500).json({ reply: "Server error" });
   }
 }
