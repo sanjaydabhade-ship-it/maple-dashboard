@@ -1,0 +1,7 @@
+{
+  "name": "05 feb 2026 dashboard version 1.1",
+  "description": "A founder-level visibility tool with real-time lead analytics, closing rankings, and a voice-enabled AI Sales Assistant powered by Gemini Live API.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
